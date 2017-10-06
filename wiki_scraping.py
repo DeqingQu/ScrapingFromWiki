@@ -24,13 +24,12 @@ def filter_links(url: str, base_url: str, search_url: str):
     for link in links_before_filter:
         href_url = str(link.get('href'))
         #   is it a relevant URL to the BASE url?
-        if href_url.startswith("/") and not href_url.startswith("//"):
+        if href_url.startswith("/") and not href_url.startswith("//") and href_url.find('#') == -1:
             href_url = base_url + href_url
         if href_url.startswith(search_url):
             if not href_url in links_after_filter.keys():
                 links_after_filter[href_url] = href_url
     return links_after_filter
-
 
 
 def get_date(date_str: str):
@@ -43,10 +42,11 @@ def get_date(date_str: str):
 
 
 def get_links_this_month(links: dict):
+    print('count of links after filter: %d' % len(links))
+
     href_count_in_a_month = 0
     for link in links:
         detail_soup = retrieve(link)
-        # print('href --- ' + href)
         for node in detail_soup.find_all('li'):
             if str(node.get('id')) == "footer-info-lastmod":
                 time_str = node.string
@@ -54,10 +54,11 @@ def get_links_this_month(links: dict):
                 now = datetime.now()
                 if (now - modified_date).days < 30:
                     href_count_in_a_month += 1
-                    print(time_str)
-                    print('final result + %d' % href_count_in_a_month)
-    print("Result " + href_count_in_a_month)
+                    # print('final result + %d' % href_count_in_a_month)
+    print("Result %d" % href_count_in_a_month)
 
 
 links_filtered = filter_links(TARGET_URL, BASE_URL, SEARCH_URL)
 get_links_this_month(links_filtered)
+
+#   Result in Oct. 5: 313/587
