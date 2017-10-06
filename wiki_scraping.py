@@ -42,7 +42,7 @@ def get_date(date_str: str):
     return modify_date
 
 
-def get_timestamp(links: dict):
+def get_links_this_month(links: dict):
     href_count_in_a_month = 0
     for link in links:
         detail_soup = retrieve(link)
@@ -59,6 +59,5 @@ def get_timestamp(links: dict):
     print("Result " + href_count_in_a_month)
 
 
-links = {}
-links = filter_links(TARGET_URL, BASE_URL, SEARCH_URL)
-get_timestamp(links)
+links_filtered = filter_links(TARGET_URL, BASE_URL, SEARCH_URL)
+get_links_this_month(links_filtered)
